@@ -6,8 +6,6 @@ use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
-use Filament\Tables\Columns\BadgeColumn;
-use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
@@ -19,28 +17,23 @@ class ProductsTable
         return $table
             ->columns([
                 TextColumn::make('name')
-                    ->label('Name')
                     ->searchable()
                     ->sortable(),
 
                 TextColumn::make('sku')
-                    ->label('SKU')
                     ->searchable(),
 
                 TextColumn::make('price')
-                    ->label('Price')
                     ->money('IDR')
                     ->sortable(),
 
                 TextColumn::make('stock')
-                    ->label('Stock')
                     ->sortable(),
 
                 ImageColumn::make('image')
-                    ->label('Image')
                     ->disk('public'),
 
-                // TUGAS: badge kolom untuk status aktif
+                // TUGAS 3: badge status aktif
                 TextColumn::make('is_active')
                     ->label('Status')
                     ->badge()
