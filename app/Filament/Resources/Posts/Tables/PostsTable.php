@@ -4,7 +4,10 @@ namespace App\Filament\Resources\Posts\Tables;
 
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
 use Filament\Actions\DeleteAction;
+use Filament\Actions\ReplicateAction;
+use Filament\Forms\Components\Checkbox;
 use Filament\Tables\Table;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ColorColumn;
@@ -13,7 +16,7 @@ use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Forms\Components\DatePicker;
-use Filament\Actions\EditAction;
+use Filament\Actions\Action;
 
 class PostsTable
 {
@@ -21,10 +24,10 @@ class PostsTable
     {
         return $table
             ->columns([
-                
+
                 TextColumn::make('id')
                     ->label('ID')
-                    ->toggleable(isToggledHiddenByDefault: true ),
+                    ->toggleable(isToggledHiddenByDefault: true),
 
                 TextColumn::make('title')
                     ->sortable()
@@ -53,7 +56,7 @@ class PostsTable
 
                 TextColumn::make('tags')
                     ->label('Tags')
-                    ->toggleable(isToggledHiddenByDefault: true ),
+                    ->toggleable(isToggledHiddenByDefault: true),
 
                 IconColumn::make('published')
                     ->boolean(),
@@ -69,7 +72,7 @@ class PostsTable
                     ->query(function ($query, $data) {
                         return $query->when(
                             $data['created_at'],
-                            fn ($query, $date) => $query->whereDate('created_at', $date)
+                            fn($query, $date) => $query->whereDate('created_at', $date)
                         );
                     }),
 
@@ -79,7 +82,19 @@ class PostsTable
                     ->preload(),
             ])
             ->recordActions([
+                ReplicateAction::make(),
                 EditAction::make(),
+                DeleteAction::make(),
+                Action::make('status')
+                    ->label('Status Change')
+                    ->icon('heroicon-o-check-circle')
+                    ->schema([
+                        Checkbox::make('published')
+                            ->default(fn($record): bool => $record->published),
+                    ])
+                    ->action(function ($record, $data) {
+                        $record->update(['published' => $data['published']]);
+                    }),
             ]);
     }
 }
