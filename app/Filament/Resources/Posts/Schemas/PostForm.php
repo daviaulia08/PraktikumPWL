@@ -49,7 +49,7 @@ class PostForm
 
                         ])->columns(2),
 
-                        MarkdownEditor::make("content")
+                        MarkdownEditor::make("body")
                             ->columnSpan(2),
 
                     ]),
@@ -62,7 +62,14 @@ class PostForm
                             ->directory("posts"),
                     ]),
 
+                Section::make("Meta Information")
+                    ->components([
+                        Select::make('tags')
+                            ->relationship('tags', 'name')
+                            ->multiple()
+                            ->preload(),
+                    ]),
+
             ]);
     }
 }
-

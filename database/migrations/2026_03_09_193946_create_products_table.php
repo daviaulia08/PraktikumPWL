@@ -1,37 +1,29 @@
 <?php
 
-namespace App\Models;
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
-
-class Product extends Model
+return new class extends Migration
 {
-    use HasFactory;
+    public function up(): void
+    {
+        Schema::create('products', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->string('sku')->unique()->nullable();
+            $table->text('description')->nullable();
+            $table->integer('price')->default(0);
+            $table->integer('stock')->default(0);
+            $table->string('image')->nullable();
+            $table->boolean('is_active')->default(true);
+            $table->boolean('is_featured')->default(false);
+            $table->timestamps();
+        });
+    }
 
-    /**
-     * Kolom yang boleh diisi secara massal.
-     * Sesuaikan dengan field di migrasi tadi.
-     */
-    protected $fillable = [
-        'name',
-        'sku',
-        'description',
-        'price',
-        'stock',
-        'image',
-        'is_active',
-        'is_featured',
-    ];
-
-    /**
-     * Casting tipe data (Opsional tapi disarankan)
-     * Agar Laravel otomatis mengubah string dari DB menjadi tipe data yang benar.
-     */
-    protected $casts = [
-        'is_active'   => 'boolean',
-        'is_featured' => 'boolean',
-        'price'       => 'integer',
-        'stock'       => 'integer',
-    ];
-}
+    public function down(): void
+    {
+        Schema::dropIfExists('products');
+    }
+};
