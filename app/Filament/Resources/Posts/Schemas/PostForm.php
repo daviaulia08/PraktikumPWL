@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\Posts\Schemas;
 //namespace App\Filament\Resources\Posts\Schemas\Category
 
+use Filament\Forms\Components\CheckboxList;
 use Filament\Forms\Components\ColorPicker;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\MarkdownEditor;
@@ -64,10 +65,13 @@ class PostForm
 
                 Section::make("Meta Information")
                     ->components([
-                        Select::make('tags')
-                            ->relationship('tags', 'name')
-                            ->multiple()
-                            ->preload(),
+                        \Filament\Forms\Components\CheckboxList::make('tags')
+                            ->relationship(
+                                name: 'tags',
+                                titleAttribute: 'name',
+                            ),
+                        \Filament\Forms\Components\Checkbox::make('published'),
+                        \Filament\Forms\Components\DateTimePicker::make('published_at'),
                     ]),
 
             ]);
